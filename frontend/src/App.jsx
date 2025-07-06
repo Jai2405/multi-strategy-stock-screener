@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+console.log('=== DEBUG INFO ===');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+console.log('API_BASE_URL will be:', process.env.REACT_APP_API_URL || 'http://localhost:8001');
+
+// API Base URL - uses environment variable or defaults to localhost
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
+
 function App() {
   const [minStrategies, setMinStrategies] = useState(2);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
-    const [serverStatus, setServerStatus] = useState(null);
+  const [serverStatus, setServerStatus] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   
 
@@ -16,7 +24,7 @@ function App() {
 
   const checkServerStatus = async () => {
     try {
-      const response = await fetch('http://localhost:8001/status');
+      const response = await fetch(`${API_BASE_URL}/status`);
       const data = await response.json();
       setServerStatus(data);
     } catch (error) {
@@ -28,7 +36,7 @@ function App() {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:8001/search', {
+      const response = await fetch(`${API_BASE_URL}/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +70,7 @@ function App() {
     setRefreshing(true);
     
     try {
-      const response = await fetch('http://localhost:8001/refresh-cache', {
+      const response = await fetch(`${API_BASE_URL}/refresh-cache`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
